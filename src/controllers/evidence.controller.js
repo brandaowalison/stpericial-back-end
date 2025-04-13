@@ -6,6 +6,7 @@ const createEvidence = async (req, res) => {
             type: req.body.type,
             collectionDate: req.body.collectionDate,
             collectedBy: req.body.collectedBy,
+            fileUrl: req.body.fileUrl,
             case: req.body.case
         })
         await evidence.save()
