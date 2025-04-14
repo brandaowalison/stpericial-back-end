@@ -1,6 +1,7 @@
 const express = require('express')
 const casesController = require('../controllers/case.controller')
 const router = express.Router()
+const { authenticate, authorize } = require('../middlewares/auth')
 
 /**
  * @swagger
@@ -44,6 +45,7 @@ const router = express.Router()
  * /api/casos:
  *   post:
  *     summary: Cria um novo caso
+ *     operationId: a_createCase
  *     tags: [Casos]
  *     requestBody:
  *       required: true
@@ -64,14 +66,14 @@ const router = express.Router()
  *                 caso:
  *                   $ref: '#/components/schemas/Caso'
  */
-
-router.post('/', casesController.createCase)
+router.post('/', authenticate, authorize(['admin', 'perito']), casesController.createCase)
 
 /**
  * @swagger
  * /api/casos:
  *   get:
  *     summary: Lista todos os casos
+ *     operationId: b_listCases
  *     tags: [Casos]
  *     responses:
  *       200:
@@ -79,13 +81,14 @@ router.post('/', casesController.createCase)
  *       500:
  *         description: Erro ao listar os casos
  */
-router.get('/', casesController.getCases)
+router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), casesController.getCases)
 
 /**
  * @swagger
  * /api/casos/{id}:
  *   get:
  *     summary: Retorna um caso pelo ID
+ *     operationId: c_getCaseById
  *     tags: [Casos]
  *     parameters:
  *       - name: id
@@ -102,13 +105,14 @@ router.get('/', casesController.getCases)
  *       500:
  *         description: Erro ao buscar o caso
  */
-router.get('/:id', casesController.getCaseById)
+router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), casesController.getCaseById)
 
 /**
  * @swagger
  * /api/casos/{id}:
  *   put:
  *     summary: Atualiza um caso existente
+ *     operationId: d_updateCase
  *     tags: [Casos]
  *     parameters:
  *       - name: id
@@ -159,14 +163,14 @@ router.get('/:id', casesController.getCaseById)
  *       500:
  *         description: Erro ao atualizar o caso
  */
-
-router.put('/:id', casesController.updateCase)
+router.put('/:id', authenticate, authorize(['admin', 'perito']), casesController.updateCase)
 
 /**
  * @swagger
  * /api/casos/{id}:
  *   delete:
  *     summary: Deleta um caso pelo ID
+ *     operationId: e_deleteCaseById
  *     tags: [Casos]
  *     parameters:
  *       - name: id
@@ -183,13 +187,14 @@ router.put('/:id', casesController.updateCase)
  *       500:
  *         description: Erro ao deletar o caso
  */
-router.delete('/:id', casesController.deleteCaseById)
+router.delete('/:id', authenticate, authorize(['admin', 'perito']), casesController.deleteCaseById)
 
 /**
  * @swagger
  * /api/casos:
  *   delete:
  *     summary: Deleta todos os casos
+ *     operationId: f_deleteAllCases
  *     tags: [Casos]
  *     responses:
  *       200:
@@ -197,6 +202,6 @@ router.delete('/:id', casesController.deleteCaseById)
  *       500:
  *         description: Erro ao deletar os casos
  */
-router.delete('/', casesController.deleteCases)
+router.delete('/', authenticate, authorize(['admin']), casesController.deleteCases)
 
 module.exports = router
