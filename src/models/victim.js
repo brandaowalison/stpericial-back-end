@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const patientSchema = new mongoose.Schema({
+const victimsSchema = new mongoose.Schema({
     name: {
         type: String,
         required: false,
@@ -31,5 +31,5 @@ const patientSchema = new mongoose.Schema({
     }
 }, {timestamps: true})
 
-const Patient = mongoose.model('Patient', patientSchema)
-module.exports = Patient
+const Victim = mongoose.model('Victim', victimsSchema)
+module.exports = Victim

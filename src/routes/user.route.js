@@ -1,8 +1,14 @@
 const express = require('express')
 const userController = require('../controllers/user.controller')
-const {authenticate, authorize} = require('../middlewares/auth')
-
+const { authenticate, authorize } = require('../middlewares/auth')
 const router = express.Router()
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Usuários
+ *     description: API para gerenciamento de usuários
+ */
 
 /**
  * @swagger
@@ -22,7 +28,8 @@ const router = express.Router()
  *           description: E-mail do usuário
  *         role:
  *           type: string
- *           description: Função do usuário (admin, perito, assistente)
+ *           enum: [admin, perito, assistente]
+ *           description: Função do usuário
  *         password:
  *           type: string
  *           description: Senha do usuário (não será retornada)
@@ -36,7 +43,6 @@ const router = express.Router()
  * /api/users:
  *   post:
  *     summary: Cria um novo usuário
- *     operationId: createUser
  *     tags: [Usuários]
  *     requestBody:
  *       required: true
@@ -66,7 +72,6 @@ router.post('/', authenticate, authorize(['admin']), userController.createUser)
  * /api/users/login:
  *   post:
  *     summary: Realiza o login de um usuário
- *     operationId: loginUser
  *     tags: [Usuários]
  *     requestBody:
  *       required: true
@@ -108,7 +113,6 @@ router.post('/login', userController.login)
  * /api/users/register:
  *   post:
  *     summary: Registra um novo usuário
- *     operationId: registerUser
  *     tags: [Usuários]
  *     requestBody:
  *       required: true
@@ -119,16 +123,12 @@ router.post('/login', userController.login)
  *             properties:
  *               name:
  *                 type: string
- *                 description: Nome completo do usuário
  *               email:
  *                 type: string
- *                 description: E-mail do usuário
  *               password:
  *                 type: string
- *                 description: Senha do usuário
  *               role:
  *                 type: string
- *                 description: Função do usuário (admin, perito, assistente)
  *                 default: assistente
  *     responses:
  *       201:
@@ -144,11 +144,10 @@ router.post('/login', userController.login)
  *                   $ref: '#/components/schemas/User'
  *                 token:
  *                   type: string
- *                   description: Token JWT gerado
  *       400:
  *         description: E-mail já cadastrado ou função inválida
  *       500:
- *         description: Erro ao registrar o usuário
+ *         description: Erro ao registrar usuário
  */
 router.post('/register', userController.register)
 
@@ -157,7 +156,6 @@ router.post('/register', userController.register)
  * /api/users/logout:
  *   post:
  *     summary: Realiza o logout de um usuário
- *     operationId: logoutUser
  *     tags: [Usuários]
  *     responses:
  *       200:
@@ -176,14 +174,13 @@ router.post('/register', userController.register)
  *       500:
  *         description: Erro ao realizar o logout
  */
-router.post('/logout', authenticate, authorize(['admin','perito','assistente']), userController.logout)
+router.post('/logout', authenticate, authorize(['admin', 'perito', 'assistente']), userController.logout)
 
 /**
  * @swagger
  * /api/users:
  *   get:
  *     summary: Lista todos os usuários
- *     operationId: getUsers
  *     tags: [Usuários]
  *     responses:
  *       200:
@@ -204,7 +201,6 @@ router.get('/', authenticate, authorize(['admin']), userController.getUsers)
  * /api/users/{id}:
  *   get:
  *     summary: Retorna um usuário pelo ID
- *     operationId: getUserById
  *     tags: [Usuários]
  *     parameters:
  *       - name: id
@@ -232,10 +228,7 @@ router.get('/:id', authenticate, authorize(['admin']), userController.getUserByI
  * /api/users/{id}:
  *   put:
  *     summary: Atualiza um usuário
- *     operationId: updateUser
  *     tags: [Usuários]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -273,7 +266,6 @@ router.put('/:id', authenticate, authorize(['admin']), userController.updateUser
  * /api/users/{id}:
  *   delete:
  *     summary: Deleta um usuário pelo ID
- *     operationId: deleteUserById
  *     tags: [Usuários]
  *     parameters:
  *       - name: id
@@ -297,7 +289,6 @@ router.delete('/:id', authenticate, authorize(['admin']), userController.deleteU
  * /api/users:
  *   delete:
  *     summary: Deleta todos os usuários
- *     operationId: deleteUsers
  *     tags: [Usuários]
  *     responses:
  *       200:

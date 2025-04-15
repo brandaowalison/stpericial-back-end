@@ -79,7 +79,7 @@ const register = async (req, res) => {
     try {
         const {name, email, password, role} = req.body
 
-        if (role && !['admin', 'perito', 'assistente'].includes(role)) {
+        if (role && !['perito', 'assistente'].includes(role)) {
             return res.status(400).json({ message: 'Função inválida!' });
         }
 

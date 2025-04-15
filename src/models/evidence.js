@@ -3,8 +3,12 @@ const mongoose = require('mongoose')
 const evidenceSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ['imagem','video','documento'],
+        enum: ['imagem','video','documento', "text"],
         required: true,
+    },
+    text: {
+        type: String,
+        trim: true 
     },
     collectionDate: {
         type: Date,
@@ -17,7 +21,13 @@ const evidenceSchema = new mongoose.Schema({
     },
     fileUrl: {
         type: String,
-        required: true
+        validate: function(value) {
+            const validUrl = /^(http?:\/\/)/
+            const validImage = /\.(jpg|jpeg|png|gif)$/i
+            const isLocalPath = /^uploads\//
+            return validUrl.test(value) || validImage.test(value) || isLocalPath.test(value)
+        },
+        message: 'O campo fileUrl deve ser uma URL válida, uma imagem ou um caminho de arquivo local.',
 
     },
     case: {

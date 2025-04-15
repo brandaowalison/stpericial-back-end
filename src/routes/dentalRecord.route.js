@@ -1,7 +1,14 @@
 const express = require('express')
 const dentalsRecordsController = require('../controllers/dentalRecord.controller')
 const router = express.Router()
-const {authenticate, authorize} = require('../middlewares/auth')
+const { authenticate, authorize } = require('../middlewares/auth')
+
+/**
+ * @swagger
+ * tags:
+ *   name: Registros Odontológicos
+ *   description: API para gerenciamento de registros odontológicos
+ */
 
 /**
  * @swagger
@@ -23,15 +30,12 @@ const {authenticate, authorize} = require('../middlewares/auth')
  *           items:
  *             type: string
  *           description: Marcas dentárias
- *         xRayImage:
- *           type: string
- *           description: URL da imagem de raio-x
  *         notes:
  *           type: string
  *           description: Notas sobre o registro odontológico
- *         patient:
+ *         victim:
  *           type: string
- *           description: ID do paciente associado ao registro odontológico
+ *           description: ID da vítima associada ao registro odontológico
  */
 
 /**
@@ -39,7 +43,6 @@ const {authenticate, authorize} = require('../middlewares/auth')
  * /api/dental-records:
  *   post:
  *     summary: Cria um novo registro odontológico
- *     operationId: createDentalRecord
  *     tags: [Registros Odontológicos]
  *     requestBody:
  *       required: true
@@ -49,7 +52,7 @@ const {authenticate, authorize} = require('../middlewares/auth')
  *             $ref: '#/components/schemas/DentalRecord'
  *     responses:
  *       201:
- *         description: Registro odontológico criado com sucesso
+ *         description: Registro odontológico adicionado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -60,16 +63,15 @@ const {authenticate, authorize} = require('../middlewares/auth')
  *                 dentalRecord:
  *                   $ref: '#/components/schemas/DentalRecord'
  *       500:
- *         description: Erro ao criar o registro odontológico
+ *         description: Erro ao adicionar registro odontológico
  */
-router.post('/', authenticate, authorize(['admin','perito']), dentalsRecordsController.createDentalRecord)
+router.post('/', authenticate, authorize(['admin', 'perito']), dentalsRecordsController.createDentalRecord)
 
 /**
  * @swagger
  * /api/dental-records:
  *   get:
  *     summary: Lista todos os registros odontológicos
- *     operationId: getDentalRecords
  *     tags: [Registros Odontológicos]
  *     responses:
  *       200:
@@ -83,14 +85,13 @@ router.post('/', authenticate, authorize(['admin','perito']), dentalsRecordsCont
  *       500:
  *         description: Erro ao listar os registros odontológicos
  */
-router.get('/', authenticate, authorize(['admin','perito','assistente']), dentalsRecordsController.getDentalRecords)
+router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), dentalsRecordsController.getDentalRecords)
 
 /**
  * @swagger
  * /api/dental-records/{id}:
  *   get:
  *     summary: Retorna um registro odontológico pelo ID
- *     operationId: getDentalRecordById
  *     tags: [Registros Odontológicos]
  *     parameters:
  *       - name: id
@@ -109,16 +110,15 @@ router.get('/', authenticate, authorize(['admin','perito','assistente']), dental
  *       404:
  *         description: Registro odontológico não encontrado
  *       500:
- *         description: Erro ao buscar o registro odontológico
+ *         description: Erro ao buscar registro odontológico
  */
-router.get('/:id', authenticate, authorize(['admin','perito','assistente']), dentalsRecordsController.getDentalRecordById)
+router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), dentalsRecordsController.getDentalRecordById)
 
 /**
  * @swagger
  * /api/dental-records/{id}:
  *   put:
  *     summary: Atualiza um registro odontológico existente
- *     operationId: updateDentalRecord
  *     tags: [Registros Odontológicos]
  *     parameters:
  *       - name: id
@@ -148,16 +148,15 @@ router.get('/:id', authenticate, authorize(['admin','perito','assistente']), den
  *       400:
  *         description: ID inválido ou registro odontológico não encontrado
  *       500:
- *         description: Erro ao atualizar o registro odontológico
+ *         description: Erro ao atualizar registro odontológico
  */
-router.put('/:id', authenticate, authorize(['admin','perito']), dentalsRecordsController.updateDentalRecord)
+router.put('/:id', authenticate, authorize(['admin', 'perito']), dentalsRecordsController.updateDentalRecord)
 
 /**
  * @swagger
  * /api/dental-records/{id}:
  *   delete:
- *     summary: Deleta um registro odontológico pelo ID
- *     operationId: deleteDentalRecordById
+ *     summary: Remove um registro odontológico
  *     tags: [Registros Odontológicos]
  *     parameters:
  *       - name: id
@@ -165,30 +164,29 @@ router.put('/:id', authenticate, authorize(['admin','perito']), dentalsRecordsCo
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do registro odontológico a ser deletado
+ *         description: ID do registro odontológico a ser removido
  *     responses:
  *       200:
- *         description: Registro odontológico deletado com sucesso
+ *         description: Registro odontológico removido com sucesso
  *       404:
  *         description: Registro odontológico não encontrado
  *       500:
- *         description: Erro ao deletar o registro odontológico
+ *         description: Erro ao remover registro odontológico
  */
-router.delete('/:id', authenticate, authorize(['admin']), dentalsRecordsController.deleteDentalRecordById)
+router.delete('/:id', authenticate, authorize(['admin', 'perito']), dentalsRecordsController.deleteDentalRecordById)
 
 /**
  * @swagger
  * /api/dental-records:
  *   delete:
- *     summary: Deleta todos os registros odontológicos
- *     operationId: deleteDentalRecords
+ *     summary: Remove todos os registros odontológicos
  *     tags: [Registros Odontológicos]
  *     responses:
  *       200:
- *         description: Todos os registros odontológicos foram deletados com sucesso
+ *         description: Todos os registros odontológicos foram removidos com sucesso
  *       500:
- *         description: Erro ao deletar os registros odontológicos
+ *         description: Erro ao remover registros odontológicos
  */
-router.delete('/', authenticate, authorize(['admin','perito']), dentalsRecordsController.createDentalRecord )
+router.delete('/', authenticate, authorize(['admin']), dentalsRecordsController.deleteDentalsRecords)
 
 module.exports = router

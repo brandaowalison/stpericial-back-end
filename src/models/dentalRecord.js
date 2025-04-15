@@ -6,15 +6,14 @@ const dentalRecordSchema = new mongoose.Schema({
         trim: true
     }],
     dentalMarks: [String],
-    xRayImage: String,
     notes: String,
     createdAt: {
         type: Date,
         default: Date.now
     },
-    patient: {
+    victim: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Patient',
+        ref: 'Victim',
         required: true
     }
 })

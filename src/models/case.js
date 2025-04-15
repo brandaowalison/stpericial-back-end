@@ -43,9 +43,9 @@ const caseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    patient: {
+    victim: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'patient'
+        ref: 'Victim'
     }
 }, {timestamps: true});
 

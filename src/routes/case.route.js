@@ -5,39 +5,51 @@ const { authenticate, authorize } = require('../middlewares/auth')
 
 /**
  * @swagger
+ * tags:
+ *   name: Casos
+ *   description: API para gerenciamento de casos
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
- *     Caso:
+ *     Case:
  *       type: object
  *       properties:
  *         _id:
  *           type: string
  *           description: ID do caso (gerado automaticamente)
- *         tipo:
+ *         type:
  *           type: string
  *           description: Tipo do caso
- *         titulo:
+ *         title:
  *           type: string
  *           description: Título do caso
- *         descricao:
+ *         description:
  *           type: string
  *           description: Descrição do caso
  *         status:
  *           type: string
  *           enum: [em_andamento, finalizado, arquivado]
  *           description: Status atual do caso
- *         numeroProcesso:
+ *         numberProcess:
  *           type: string
  *           description: Número do processo (se houver)
- *         dataAbertura:
+ *         openingDate:
  *           type: string
  *           format: date
- *         dataFechamento:
+ *           description: Data de abertura do caso
+ *         closingDate:
  *           type: string
  *           format: date
- *         responsavel:
+ *           description: Data de fechamento do caso
+ *         responsible:
  *           type: string
  *           description: ID do usuário responsável
+ *         victim:
+ *           type: string
+ *           description: ID da vítima associada ao caso
  */
 
 /**
@@ -45,17 +57,16 @@ const { authenticate, authorize } = require('../middlewares/auth')
  * /api/casos:
  *   post:
  *     summary: Cria um novo caso
- *     operationId: a_createCase
  *     tags: [Casos]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Caso'
+ *             $ref: '#/components/schemas/Case'
  *     responses:
  *       201:
- *         description: Caso criado com sucesso
+ *         description: Caso adicionado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -63,8 +74,10 @@ const { authenticate, authorize } = require('../middlewares/auth')
  *               properties:
  *                 message:
  *                   type: string
- *                 caso:
- *                   $ref: '#/components/schemas/Caso'
+ *                 case:
+ *                   $ref: '#/components/schemas/Case'
+ *       500:
+ *         description: Erro ao adicionar caso
  */
 router.post('/', authenticate, authorize(['admin', 'perito']), casesController.createCase)
 
@@ -73,11 +86,16 @@ router.post('/', authenticate, authorize(['admin', 'perito']), casesController.c
  * /api/casos:
  *   get:
  *     summary: Lista todos os casos
- *     operationId: b_listCases
  *     tags: [Casos]
  *     responses:
  *       200:
  *         description: Lista de casos retornada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Case'
  *       500:
  *         description: Erro ao listar os casos
  */
@@ -88,7 +106,6 @@ router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), case
  * /api/casos/{id}:
  *   get:
  *     summary: Retorna um caso pelo ID
- *     operationId: c_getCaseById
  *     tags: [Casos]
  *     parameters:
  *       - name: id
@@ -100,10 +117,14 @@ router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), case
  *     responses:
  *       200:
  *         description: Caso encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Case'
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Erro ao buscar o caso
+ *         description: Erro ao buscar caso
  */
 router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), casesController.getCaseById)
 
@@ -112,7 +133,6 @@ router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), c
  * /api/casos/{id}:
  *   put:
  *     summary: Atualiza um caso existente
- *     operationId: d_updateCase
  *     tags: [Casos]
  *     parameters:
  *       - name: id
@@ -126,42 +146,23 @@ router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), c
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               tipo:
- *                 type: string
- *                 example: Civil
- *               titulo:
- *                 type: string
- *                 example: Caso de fratura mandibular
- *               descricao:
- *                 type: string
- *                 example: Paciente apresenta fratura após acidente veicular.
- *               status:
- *                 type: string
- *                 enum: [em_andamento, finalizado, arquivado]
- *                 example: finalizado
- *               numeroProcesso:
- *                 type: string
- *                 example: 2023.000123-45
- *               dataAbertura:
- *                 type: string
- *                 format: date
- *                 example: 2023-10-01
- *               dataFechamento:
- *                 type: string
- *                 format: date
- *                 example: 2023-12-01
- *               responsavel:
- *                 type: string
- *                 example: 652f1cb4bdfc8768b8f0e123
+ *             $ref: '#/components/schemas/Case'
  *     responses:
  *       200:
  *         description: Caso atualizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 updatedCase:
+ *                   $ref: '#/components/schemas/Case'
  *       400:
  *         description: ID inválido ou caso não encontrado
  *       500:
- *         description: Erro ao atualizar o caso
+ *         description: Erro ao atualizar caso
  */
 router.put('/:id', authenticate, authorize(['admin', 'perito']), casesController.updateCase)
 
@@ -170,7 +171,6 @@ router.put('/:id', authenticate, authorize(['admin', 'perito']), casesController
  * /api/casos/{id}:
  *   delete:
  *     summary: Deleta um caso pelo ID
- *     operationId: e_deleteCaseById
  *     tags: [Casos]
  *     parameters:
  *       - name: id
@@ -185,22 +185,21 @@ router.put('/:id', authenticate, authorize(['admin', 'perito']), casesController
  *       404:
  *         description: Caso não encontrado
  *       500:
- *         description: Erro ao deletar o caso
+ *         description: Erro ao deletar caso
  */
-router.delete('/:id', authenticate, authorize(['admin', 'perito']), casesController.deleteCaseById)
+router.delete('/:id', authenticate, authorize(['admin']), casesController.deleteCaseById)
 
 /**
  * @swagger
  * /api/casos:
  *   delete:
  *     summary: Deleta todos os casos
- *     operationId: f_deleteAllCases
  *     tags: [Casos]
  *     responses:
  *       200:
- *         description: Todos os casos foram deletados
+ *         description: Todos os casos foram deletados com sucesso
  *       500:
- *         description: Erro ao deletar os casos
+ *         description: Erro ao deletar todos os casos
  */
 router.delete('/', authenticate, authorize(['admin']), casesController.deleteCases)
 

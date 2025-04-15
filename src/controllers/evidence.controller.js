@@ -2,11 +2,13 @@ const Evidence = require('../models/evidence')
 
 const createEvidence = async (req, res) => {
     try {
+        const filePath = req.file ? req.file.path : req.body.fileUrl
         const evidence = new Evidence({
             type: req.body.type,
+            text: req.body.text,
             collectionDate: req.body.collectionDate,
             collectedBy: req.body.collectedBy,
-            fileUrl: req.body.fileUrl,
+            fileUrl: filePath,
             case: req.body.case
         })
         await evidence.save()

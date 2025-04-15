@@ -1,8 +1,14 @@
 const express = require('express')
 const evidenceController = require('../controllers/evidence.controller')
-const {authenticate, authorize} = require('../middlewares/auth')
-
+const { authenticate, authorize } = require('../middlewares/auth')
 const router = express.Router()
+
+/**
+ * @swagger
+ * tags:
+ *   name: Evidências
+ *   description: API para gerenciamento de evidências
+ */
 
 /**
  * @swagger
@@ -16,8 +22,11 @@ const router = express.Router()
  *           description: ID da evidência (gerado automaticamente)
  *         type:
  *           type: string
- *           enum: [imagem, video, documento]
+ *           enum: [imagem, video, documento, text]
  *           description: Tipo da evidência
+ *         text:
+ *           type: string
+ *           description: Texto da evidência
  *         collectionDate:
  *           type: string
  *           format: date
@@ -38,7 +47,6 @@ const router = express.Router()
  * /api/evidences:
  *   post:
  *     summary: Cria uma nova evidência
- *     operationId: createEvidence
  *     tags: [Evidências]
  *     requestBody:
  *       required: true
@@ -48,24 +56,26 @@ const router = express.Router()
  *             $ref: '#/components/schemas/Evidence'
  *     responses:
  *       201:
- *         description: Evidência criada com sucesso
+ *         description: Evidência adicionada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Evidence'
- *       400:
- *         description: Dados inválidos
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 evidence:
+ *                   $ref: '#/components/schemas/Evidence'
  *       500:
- *         description: Erro ao criar a evidência
+ *         description: Erro ao adicionar evidência
  */
-router.post('/', authenticate, authorize(['admin','perito','assistente']), evidenceController.createEvidence)
+router.post('/', authenticate, authorize(['admin', 'perito', 'assistente']), evidenceController.createEvidence)
 
 /**
  * @swagger
  * /api/evidences:
  *   get:
  *     summary: Lista todas as evidências
- *     operationId: listEvidences
  *     tags: [Evidências]
  *     responses:
  *       200:
@@ -79,15 +89,13 @@ router.post('/', authenticate, authorize(['admin','perito','assistente']), evide
  *       500:
  *         description: Erro ao listar as evidências
  */
-
-router.get('/', authenticate, authorize(['admin','perito','assistente']), evidenceController.getEvidences)
+router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), evidenceController.getEvidences)
 
 /**
  * @swagger
  * /api/evidences/{id}:
  *   get:
  *     summary: Retorna uma evidência pelo ID
- *     operationId: getEvidenceById
  *     tags: [Evidências]
  *     parameters:
  *       - name: id
@@ -106,16 +114,15 @@ router.get('/', authenticate, authorize(['admin','perito','assistente']), eviden
  *       404:
  *         description: Evidência não encontrada
  *       500:
- *         description: Erro ao buscar a evidência
+ *         description: Erro ao buscar evidência
  */
-router.get('/:id', authenticate, authorize(['admin','perito','assistente']), evidenceController.getEvidenceById)
+router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), evidenceController.getEvidenceById)
 
 /**
  * @swagger
  * /api/evidences/{id}:
  *   put:
  *     summary: Atualiza uma evidência existente
- *     operationId: updateEvidence
  *     tags: [Evidências]
  *     parameters:
  *       - name: id
@@ -136,20 +143,24 @@ router.get('/:id', authenticate, authorize(['admin','perito','assistente']), evi
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Evidence'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 updatedEvidence:
+ *                   $ref: '#/components/schemas/Evidence'
  *       400:
  *         description: ID inválido ou evidência não encontrada
  *       500:
- *         description: Erro ao atualizar a evidência
+ *         description: Erro ao atualizar evidência
  */
-router.put('/:id', authenticate, authorize(['admin','perito','assistente']), evidenceController.updateEvidence)
+router.put('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), evidenceController.updateEvidence)
 
 /**
  * @swagger
  * /api/evidences/{id}:
  *   delete:
  *     summary: Deleta uma evidência pelo ID
- *     operationId: deleteEvidenceById
  *     tags: [Evidências]
  *     parameters:
  *       - name: id
@@ -164,22 +175,21 @@ router.put('/:id', authenticate, authorize(['admin','perito','assistente']), evi
  *       404:
  *         description: Evidência não encontrada
  *       500:
- *         description: Erro ao deletar a evidência
+ *         description: Erro ao deletar evidência
  */
-router.delete('/:id', authenticate, authorize(['admin','perito','assistente']), evidenceController.deleteEvidenceById)
+router.delete('/:id', authenticate, authorize(['admin']), evidenceController.deleteEvidenceById)
 
 /**
  * @swagger
  * /api/evidences:
  *   delete:
  *     summary: Deleta todas as evidências
- *     operationId: deleteAllEvidences
  *     tags: [Evidências]
  *     responses:
  *       200:
  *         description: Todas as evidências foram deletadas com sucesso
  *       500:
- *         description: Erro ao deletar as evidências
+ *         description: Erro ao deletar todas as evidências
  */
 router.delete('/', authenticate, authorize(['admin']), evidenceController.deleteEvidences)
 

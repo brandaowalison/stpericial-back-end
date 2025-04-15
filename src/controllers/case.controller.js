@@ -1,4 +1,5 @@
 const Case = require('../models/case')
+const victim = require('../models/victim')
 
 const createCase = async (req, res) => {
     try {
@@ -11,7 +12,7 @@ const createCase = async (req, res) => {
             openingDate: req.body.openingDate,
             closingDate: req.body.closingDate,
             responsible: req.body.responsible,
-            patient: req.body.patient
+            victim: req.body.victim
         })
         await createAcase.save()
         res.status(201).json({message: 'Caso adicionado com sucesso!', createAcase: createAcase})
@@ -23,7 +24,10 @@ const createCase = async (req, res) => {
 
 const getCases = async (req, res) => {
     try {
-        const cases = await Case.find().populate('patient')
+        console.log('Requisitando casos com populate de victim...')
+        const cases = await Case.find().populate('victim').exec()
+
+        console.log('Casos encontrados:', cases)
         res.status(201).json(cases)
     } catch (err) {
         console.error({message: 'Erro ao listar os casos:', err});
@@ -38,7 +42,7 @@ const getCaseById = async (req, res) => {
         return res.status(400).json({message: `ID não fornecido na URL da requisição.`})
     }
     try {
-        const oneCase = await Case.findById(id).populate('patient')
+        const oneCase = await Case.findById(id).populate('victim').exec()
         if(oneCase) {
             res.status(200).json(oneCase)
         } else {

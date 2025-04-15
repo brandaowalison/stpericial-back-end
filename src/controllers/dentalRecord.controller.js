@@ -5,9 +5,8 @@ const createDentalRecord = async (req, res) => {
         const dentalRecord = new DentalRecord({
             missingTeeth: req.body.missingTeeth,
             dentalMarks: req.body.dentalMarks,
-            xRayImage: req.body.xRayImage,
             notes: req.body.notes,
-            patient: req.body.patient
+            victim: req.body.victim
         })
         await dentalRecord.save()
         res.status(201).json({message: 'Registro odontológico adicionado com sucesso!', dentalRecord: dentalRecord})

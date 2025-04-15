@@ -5,7 +5,7 @@ require('dotenv').config()
 async function authenticate(req, res, next) {
     const authHeader = req.headers.authorization
 
-    if(!authHeader || !authHeader.startsWith('Bearer ')) {
+    if(!authHeader || !authHeader.startsWith('Bearer ','')) {
         return res.status(401).json({message: 'Token não fornecido'})
     }
     const token = authHeader.split(' ')[1]
@@ -15,6 +15,7 @@ async function authenticate(req, res, next) {
         req.user = await User.findById(decoded.id).select('-password')
         next()
     } catch (err) {
+        console.error('Erro ao verificar JWT:', err.message)
         return res.status(401).json({message: 'Token inválido'})
     }
 }
