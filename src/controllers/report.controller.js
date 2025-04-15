@@ -1,4 +1,5 @@
 const PDFDocument = require('pdfkit')
+const {assinarLaudo} = require('../utils/assinatura')
 const Report = require('../models/report')
 
 const createReport = async (req, res) => {
@@ -103,6 +104,15 @@ const generateReportPdf = async (req, res) => {
         if(!report) {
             return res.status(404).json({message: 'Laudo não encontrado.'})
         }
+
+        const contentToSubscribe = `
+            Título: ${report.title}
+            Descrição: ${report.description}
+            Data de Emissão: ${new Date(report.dateEmission).toLocaleDateString()}
+            Perito responsável: ${report.expertResponsible?.name || 'Não informado'}
+        `
+        
+        const assinatura = assinarLaudo(contentToSubscribe)
         
         const doc = new PDFDocument()
         res.setHeader('Content-Type','application/pdf')
@@ -121,6 +131,12 @@ const generateReportPdf = async (req, res) => {
 
         doc.text('---')
         doc.text(`Gerado em: ${new Date().toLocaleString()}`)
+        doc.moveDown()
+
+        doc.fontSize(10).text('Assinatura digital:', {underline: true})
+        doc.font('courier').fontSize(8).text(assinatura, {
+            width:500
+        })
 
         doc.end()
     } catch (err) {
