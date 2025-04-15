@@ -75,43 +75,6 @@ const login = async (req, res) => {
     }
 }
 
-const register = async (req, res) => {
-    try {
-        const {name, email, password, role} = req.body
-
-        if (role && !['perito', 'assistente'].includes(role)) {
-            return res.status(400).json({ message: 'Função inválida!' });
-        }
-
-        const userExists = await User.findOne({email})
-        if (userExists) {
-            return res.status(400).json({message: 'Email já cadastrado.'})
-        }
-        const user = new User({
-            name,
-            email,
-            password,
-            role: role || 'assistente'
-        })
-        await user.save()
-
-        const token = user.generateTokenJWT()
-        res.status(201).json({
-            message: 'Usuário registrado com sucesso!',
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            },
-            token
-        })
-    } catch (err) {
-        console.error('Erro no registro de usuário:', err);
-        res.status(500).json({ error: 'Erro ao registrar usuário.' });
-    }
-}
-
 const logout = (req, res) => {
     res.status(200).json({message: 'Logout bem-sucedido'})
 }
@@ -180,7 +143,6 @@ module.exports = {
     getUsers, 
     getUserById, 
     login,
-    register,
     logout, 
     updateUser, 
     deleteUserById, 

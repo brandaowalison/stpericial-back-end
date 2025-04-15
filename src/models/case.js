@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+// data q ocorreu e local
 const caseSchema = new mongoose.Schema({
     type: {
         type: String,

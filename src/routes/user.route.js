@@ -108,48 +108,6 @@ router.post('/', authenticate, authorize(['admin']), userController.createUser)
  */
 router.post('/login', userController.login)
 
-/**
- * @swagger
- * /api/users/register:
- *   post:
- *     summary: Registra um novo usuário
- *     tags: [Usuários]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *               role:
- *                 type: string
- *                 default: assistente
- *     responses:
- *       201:
- *         description: Usuário registrado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/User'
- *                 token:
- *                   type: string
- *       400:
- *         description: E-mail já cadastrado ou função inválida
- *       500:
- *         description: Erro ao registrar usuário
- */
-router.post('/register', userController.register)
 
 /**
  * @swagger
