@@ -134,7 +134,7 @@ const generateReportPdf = async (req, res) => {
         doc.moveDown()
 
         doc.fontSize(10).text('Assinatura digital:', {underline: true})
-        doc.font('courier').fontSize(8).text(assinatura, {
+        doc.font('Helvetica').fontSize(8).text(assinatura, {
             width:500
         })
 
