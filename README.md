@@ -27,8 +27,7 @@ stpericial-back-end/
 |   ├── models/            # Modelos do Mongoose
 |   ├── middlewares/       # Autenticação e Upload
 │   ├── routes/            # Definição das rotas da API
-│   ├── utils/             # Funções utilitárias (ex: assinatura.js)
-├── upload/                # Armazenamento de arquivos gerados
+│   ├── utils/             # Funções utilitárias (ex: assinatura.js e cloudinary.js)
 ├── .env.example           # Exemplo de variáveis de ambiente
 ├── server.js              # Ponto de entrada da aplicação
 ├── package.json           # Dependências e scripts
@@ -58,6 +57,7 @@ stpericial-back-end/
    MONGODB_URI=mongodb://localhost:27017/stpericial
    PRIVATE_KEY_PATH=keys/private.pem
    PUBLIC_KEY_PATH=keys/public.pem
+   CLOUDINARY_URL=cloudinary://<api_key>:<api_secret>@<cloud_name>
    ```
 
 4. **Inicie o servidor:**
