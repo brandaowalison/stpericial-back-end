@@ -2,13 +2,13 @@ const Evidence = require('../models/evidence')
 
 const createEvidence = async (req, res) => {
     try {
-        const filePath = req.file ? req.file.path : req.body.fileUrl
+        const fileUrl = req.file ? req.file.path : req.body.fileUrl;
         const evidence = new Evidence({
             type: req.body.type,
             text: req.body.text,
             collectionDate: req.body.collectionDate,
             collectedBy: req.body.collectedBy,
-            fileUrl: filePath,
+            fileUrl: fileUrl,
             case: req.body.case
         })
         await evidence.save()
@@ -76,6 +76,8 @@ const deleteEvidenceById = async (req, res) => {
         if(deletedEvidence.deletedCount === 0) {
             return res.status(404).json({message: `Nenhuma evidência encontrada com essa id${id}.`})
         }
+
+        
         res.status(200).json({message: `Evidência com ID=${id} foi deletado com sucesso!`})
     } catch (err) {
         console.error('Erro ao deletar evidência:', err)

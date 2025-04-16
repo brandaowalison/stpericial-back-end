@@ -1,7 +1,9 @@
 const express = require('express')
 const evidenceController = require('../controllers/evidence.controller')
 const { authenticate, authorize } = require('../middlewares/auth')
+const upload = require('../middlewares/upload')
 const router = express.Router()
+
 
 /**
  * @swagger
@@ -51,9 +53,27 @@ const router = express.Router()
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:  # Mudei para multipart/form-data para aceitar upload de arquivos
  *           schema:
- *             $ref: '#/components/schemas/Evidence'
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *               text:
+ *                 type: string
+ *               collectionDate:
+ *                 type: string
+ *                 format: date
+ *               collectedBy:
+ *                 type: string
+ *               file:                # Aqui definimos o arquivo de forma explícita
+ *                 type: string
+ *                 format: binary      # Para arquivos binários (como imagens, vídeos)
+ *               fileUrl:             # Ou a URL do arquivo, se for o caso
+ *                 type: string
+ *               case:
+ *                 type: string
+ *                 description: ID do caso associado à evidência
  *     responses:
  *       201:
  *         description: Evidência adicionada com sucesso
@@ -66,10 +86,12 @@ const router = express.Router()
  *                   type: string
  *                 evidence:
  *                   $ref: '#/components/schemas/Evidence'
+ *       400:
+ *         description: Arquivo ou URL da evidência é obrigatório
  *       500:
  *         description: Erro ao adicionar evidência
  */
-router.post('/', authenticate, authorize(['admin', 'perito', 'assistente']), evidenceController.createEvidence)
+router.post('/', authenticate, authorize(['admin', 'perito', 'assistente']), upload.single('file'), evidenceController.createEvidence)
 
 /**
  * @swagger
