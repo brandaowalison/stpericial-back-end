@@ -1,2 +1,4 @@
 node_modules
 .env
+private.pem
+keys/private.pem
