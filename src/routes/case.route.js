@@ -54,7 +54,7 @@ const { authenticate, authorize } = require('../middlewares/auth')
 
 /**
  * @swagger
- * /api/casos:
+ * /api/cases:
  *   post:
  *     summary: Cria um novo caso
  *     tags: [Casos]
@@ -83,7 +83,7 @@ router.post('/', authenticate, authorize(['admin', 'perito']), casesController.c
 
 /**
  * @swagger
- * /api/casos:
+ * /api/cases:
  *   get:
  *     summary: Lista todos os casos
  *     tags: [Casos]
@@ -103,7 +103,7 @@ router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), case
 
 /**
  * @swagger
- * /api/casos/{id}:
+ * /api/cases/{id}:
  *   get:
  *     summary: Retorna um caso pelo ID
  *     tags: [Casos]
@@ -130,7 +130,7 @@ router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), c
 
 /**
  * @swagger
- * /api/casos/{id}:
+ * /api/cases/{id}:
  *   put:
  *     summary: Atualiza um caso existente
  *     tags: [Casos]
@@ -168,7 +168,7 @@ router.put('/:id', authenticate, authorize(['admin', 'perito']), casesController
 
 /**
  * @swagger
- * /api/casos/{id}:
+ * /api/cases/{id}:
  *   delete:
  *     summary: Deleta um caso pelo ID
  *     tags: [Casos]
@@ -191,7 +191,7 @@ router.delete('/:id', authenticate, authorize(['admin']), casesController.delete
 
 /**
  * @swagger
- * /api/casos:
+ * /api/cases:
  *   delete:
  *     summary: Deleta todos os casos
  *     tags: [Casos]
