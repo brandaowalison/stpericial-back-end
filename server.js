@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./src/db/connect.js')
 const { swaggerUi, swaggerSpec } = require('./src/docs/swagger.js')
-const fs = require('fs')
 const casesRouter = require('./src/routes/case.route.js')
 const usersRouter = require('./src/routes/user.route.js')
 const evidencesRouter = require('./src/routes/evidence.route.js')
@@ -13,16 +12,12 @@ const dentalRouter = require('./src/routes/dentalRecord.route.js')
 const generalRecord = require('./src/routes/gR.route.js')
 
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const path = './upload'
-if(!fs.existsSync(path)) {
-    fs.mkdirSync(path)
-}
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
