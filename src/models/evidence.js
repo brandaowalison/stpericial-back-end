@@ -21,13 +21,15 @@ const evidenceSchema = new mongoose.Schema({
     },
     fileUrl: {
         type: String,
-        validate: function(value) {
-            const validUrl = /^(http?:\/\/)/
-            const validImage = /\.(jpg|jpeg|png|gif)$/i
-            const isLocalPath = /^uploads\//
-            return validUrl.test(value) || validImage.test(value) || isLocalPath.test(value)
-        },
-        message: 'O campo fileUrl deve ser uma URL válida, uma imagem ou um caminho de arquivo local.',
+        required: true,
+        validate: {
+            validator: function(value) {
+                const validExtensions = /\.(jpg|jpeg|png|gif|pdf|mp4|avi|mov|mkv|webm)$/i;
+                const isValidCloudUrl = /^https?:\/\/.+/i.test(value) && validExtensions.test(value);
+                return isValidCloudUrl;
+            },
+            message: props => `${props.value} não é uma URL válida com extensão permitida (.jpg, .png, .gif, .pdf, .mp4, .mov, etc.)`
+        }
 
     },
     case: {
