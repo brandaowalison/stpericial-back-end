@@ -2,15 +2,26 @@ const fs = require('fs')
 const crypto = require('crypto')
 require('dotenv').config()
 
-const privateKey = fs.readFileSync(process.env.PRIVATE_KEY_PATH, 'utf8')
-const publicKey = fs.readFileSync(process.env.PUBLIC_KEY_PATH, 'utf8')
+const isProduction = process.env.NODE_ENV === 'production'
+
+const privateKeyPath = isProduction ? '/etc/secrets/private.pem' : process.env.PRIVATE_KEY_PATH
+const publicKeyPath = isProduction ? '/etc/secrets/public.pem' : process.env.PUBLIC_KEY_PATH
+
+let privateKey, publicKey
+
+try {
+    privateKey = fs.readFileSync(privateKeyPath, 'utf8')
+    publicKey = fs.readFileSync(publicKeyPath, 'utf8')
+} catch (err) {
+    console.error('Erro ao carregar as chaves:', err.message)
+    process.exit(1)
+}
 
 function assinarLaudo(texto) {
     const sign = crypto.createSign('SHA256')
     sign.update(texto)
     sign.end()
-    const assinatura = sign.sign(privateKey, 'base64')
-    return assinatura
+    return sign.sign(privateKey, 'base64')
 }
 
 function verificarAssinatura(texto, assinatura) {
