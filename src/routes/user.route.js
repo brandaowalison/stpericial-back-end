@@ -179,7 +179,7 @@ router.get('/', authenticate, authorize(['admin']), userController.getUsers)
  *       500:
  *         description: Erro ao buscar o usuário
  */
-router.get('/:id', authenticate, authorize(['admin']), userController.getUserById)
+router.get('/:id', authenticate, authorize(['admin','perito','assistente']), userController.getUserById)
 
 /**
  * @swagger
