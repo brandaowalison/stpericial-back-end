@@ -101,6 +101,7 @@ const generateReportPdf = async (req, res) => {
             .populate('expertResponsible', 'name')
             .populate('evidence')
 
+
         if(!report) {
             return res.status(404).json({message: 'Laudo não encontrado.'})
         }
@@ -117,12 +118,26 @@ const generateReportPdf = async (req, res) => {
         const doc = new PDFDocument()
         res.setHeader('Content-Type','application/pdf')
         res.setHeader('Content-Disposition',`inline; filename="laudo_${id}.pdf`)
+        
+        const evidence = report.evidence
 
+        if(!evidence) {
+            return res.status(404).json({message: 'Evidência não encontrada.'})
+        }
         doc.pipe(res)
 
+        const path = require('path')
+        const logoPath = path.join(__dirname, '../assets/images/logo-stpericial.jpeg')
+        
+        doc.image(logoPath, 50, 20, {width: 100})
         doc.fontSize(20).text('Laudo Pericial', {align: 'center'})
         doc.moveDown()
         
+        doc.fontSize(12).text(`ID da Evidência: ${evidence._id}`)
+        doc.text(`Nome da Evidência: ${evidence.type || 'Não informado'}`)
+        doc .text(`Descrição da Evidência: ${evidence.text || 'Não informado'}`)
+        doc.moveDown()
+
         doc.fontSize(12).text(`Título: ${report.title}`)
         doc.text(`Descrição: ${report.description}`)
         doc.text(`Data de Emissão: ${new Date(report.dateEmission).toLocaleDateString()}`)

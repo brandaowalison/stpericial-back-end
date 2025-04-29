@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const victimsSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: false,
-        trim: true
+        trim: true,
+        required: true,
     },
     sex: {
         type: String,
@@ -12,18 +12,18 @@ const victimsSchema = new mongoose.Schema({
         required: true
     },
     dateBirth: {
-        type: Date,
-        required: true
+        type: Date
     },
     identification: {
         type: String,
-        required: true,
         unique: true,
         match: /^[a-zA-Z0-9]+$/
     },
     identified: {
         type: Boolean,
+        required: true,
         default: true
+        
     },
     observations: {
         type: String,
