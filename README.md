@@ -73,7 +73,7 @@ stpericial-back-end/
 A documentação interativa da API está disponível via Swagger em:
 
 ```
-http://localhost:3000/api-docs
+https://stpericial-back-end.onrender.com/api-docs
 ```
 
 ## 📝 Licença
