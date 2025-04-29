@@ -21,6 +21,7 @@ Back-end do Projeto Integrador desenvolvido com Node.js, responsável por gerenc
 stpericial-back-end/
 ├── keys/                  # Chaves privadas e públicas para assinatura digital
 ├── src/
+|   ├── assets/            # Imagens
 |   ├── controllers/       # Lógica dos endpoints
 │   ├── db/                # Conexão com o Banco
 │   ├── docs/              # Documentação do Swagger
@@ -53,6 +54,8 @@ stpericial-back-end/
    Renomeie o arquivo `.env.example` para `.env` e ajuste os valores conforme necessário:
 
    ```env
+   JWT_SECRET=Adicione uma secret de sua escolha
+   JWT_EXPIRES_IN=1d
    PORT=3000
    MONGODB_URI=mongodb://localhost:27017/stpericial
    PRIVATE_KEY_PATH=keys/private.pem
@@ -63,7 +66,7 @@ stpericial-back-end/
 4. **Inicie o servidor:**
 
    ```bash
-   npm start
+   npm run dev
    ```
 
    O servidor estará disponível em `http://localhost:3000`.
