@@ -11,6 +11,8 @@ const createCase = async (req, res) => {
             numberProcess: req.body.numberProcess,
             openingDate: req.body.openingDate,
             closingDate: req.body.closingDate,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
             responsible: req.body.responsible,
             victim: req.body.victim
         })

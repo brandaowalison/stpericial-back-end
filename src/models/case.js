@@ -39,6 +39,12 @@ const caseSchema = new mongoose.Schema({
         default: Date.now
     },
     closingDate: Date,
+    latitude: {
+        type: Number
+    },
+    longitude: {
+        type: Number
+    },
     responsible: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

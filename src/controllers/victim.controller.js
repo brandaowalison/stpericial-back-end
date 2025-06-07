@@ -8,7 +8,9 @@ const createVictim = async (req, res) => {
             dateBirth: req.body.dateBirth,
             identification: req.body.identification,
             identified: req.body.identified,
-            observations: req.body.observations
+            observations: req.body.observations,
+            ethnicity: req.body.ethnicity,
+            age: req.body.age
         })
         await victim.save()
         res.status(201).json({message: 'Vítima adicionada com sucesso!', victim: victim})

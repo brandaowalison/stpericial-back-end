@@ -28,7 +28,13 @@ const victimsSchema = new mongoose.Schema({
     observations: {
         type: String,
         trim: true
-    }
+    },
+    ethnicity: {
+        type: String,
+        enum: ['branca', 'preta','parda','amarela','indigena','outro'],
+        required: true
+    },
+    age: Number
 }, {timestamps: true})
 
 const Victim = mongoose.model('Victim', victimsSchema)
