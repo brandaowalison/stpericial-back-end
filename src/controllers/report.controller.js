@@ -1,6 +1,8 @@
 const PDFDocument = require('pdfkit')
 const {assinarLaudo} = require('../utils/assinatura')
 const Report = require('../models/report')
+const Evidence = require('../models/evidence')
+const axios = require('axios')
 
 const createReport = async (req, res) => {
     try {
@@ -140,6 +142,7 @@ const generateReportPdf = async (req, res) => {
 
         doc.fontSize(12).text(`Título: ${report.title}`)
         doc.text(`Descrição: ${report.description}`)
+        doc.moveDown()
         doc.text(`Data de Emissão: ${new Date(report.dateEmission).toLocaleDateString()}`)
         doc.text(`Perito responsável: ${report.expertResponsible?.name || 'Não informado'}`)
         doc.moveDown()
@@ -160,6 +163,83 @@ const generateReportPdf = async (req, res) => {
     }
 }
 
+const generateReportWithIA = async (req, res) => {
+    const {case_id} = req.params
+
+    if (!case_id) {
+        return res.status(400).json({ error: "O 'caseID' é obrigatório."})
+    }
+
+    try {
+        const evidences = await Evidence.find({case: case_id})
+
+        if (!evidences || evidences.length === 0) {
+            return res.status(400).json({ error: `Nenhuma evidência encontrada para o caso '${case_id}'.`})
+        }
+        const createReport = []
+
+        for (const evidence of evidences) {
+            const prompt = `Gere um laudo pericial com base nesta evidência:
+                - Tipo: ${evidence.type}
+                - Descrição: ${evidence.text}
+                - Data da Coleta: ${new Date(evidence.collectionDate).toLocaleDateString('pt-BR')}
+                - Coletada por: ${evidence.collectedBy}
+                - URL do Arquivo: ${evidence.fileUrl}
+
+        Crie um laudo técnico e objetivo com base exclusivamente na evidência fornecida. O texto deve ter no máximo 1000 caracteres, sem usar formatação ou marcações especiais. Use linguagem formal e descritiva.`
+
+        const response = await axios.post('https://api.openai.com/v1/chat/completions',
+            {
+                model: 'gpt-4o',
+                messages: [
+                    {
+                    role: 'system',
+                    content: 'Você é um assistente especializado em gerar laudos periciais detalhados com base em evidências fornecidas.'
+                    },
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                temperature: 0.7,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+                }   
+            }
+        )
+        const generatedReport = response.data.choices[0].message.content
+
+        if (!generatedReport || generatedReport.trim() === '') {
+            continue
+        }
+        const newReport = new Report({
+            title: `Laudo gerado automaticamente via IA para a envidência: ${evidence._id}`,
+            description: generatedReport,
+            dateEmission: new Date(),
+            expertResponsible: req.user?._id || null,
+            evidence: evidence._id
+        })
+        await newReport.save()
+        createReport.push({reportId: newReport._id, evidenceId: evidence._id})
+        }
+        if (createReport.length === 0) {
+            return res.status(400).json({ error: 'Nenhum laudo foi gerado com base na evidência.'})
+        }
+        res.status(200).json({
+            message: 'Laudos gerados com sucesso!',
+            reports: createReport
+        })
+    } catch (err) {
+        console.error('Erro ao gerar laudo com IA:', err)
+        res.status(500).json({ error: 'Erro ao gerar laudo com IA.' })
+    }
+}
+
+
+
 module.exports = {
     createReport,
     getReports,
@@ -167,5 +247,6 @@ module.exports = {
     updateReport,
     deleteReportById,
     deleteReports,
-    generateReportPdf
+    generateReportPdf,
+    generateReportWithIA
 }
