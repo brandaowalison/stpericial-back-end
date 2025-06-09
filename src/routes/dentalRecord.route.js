@@ -40,7 +40,7 @@ const { authenticate, authorize } = require('../middlewares/auth')
 
 /**
  * @swagger
- * /api/dental-records:
+ * /api/dentalRecord:
  *   post:
  *     summary: Cria um novo registro odontológico
  *     tags: [Registros Odontológicos]
@@ -69,7 +69,7 @@ router.post('/', authenticate, authorize(['admin', 'perito']), dentalsRecordsCon
 
 /**
  * @swagger
- * /api/dental-records:
+ * /api/dentalRecord:
  *   get:
  *     summary: Lista todos os registros odontológicos
  *     tags: [Registros Odontológicos]
@@ -89,7 +89,7 @@ router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), dent
 
 /**
  * @swagger
- * /api/dental-records/{id}:
+ * /api/dentalRecord/{id}:
  *   get:
  *     summary: Retorna um registro odontológico pelo ID
  *     tags: [Registros Odontológicos]
@@ -116,7 +116,7 @@ router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), d
 
 /**
  * @swagger
- * /api/dental-records/{id}:
+ * /api/dentalRecord/{id}:
  *   put:
  *     summary: Atualiza um registro odontológico existente
  *     tags: [Registros Odontológicos]
@@ -154,7 +154,7 @@ router.put('/:id', authenticate, authorize(['admin', 'perito']), dentalsRecordsC
 
 /**
  * @swagger
- * /api/dental-records/{id}:
+ * /api/dentalRecord/{id}:
  *   delete:
  *     summary: Remove um registro odontológico
  *     tags: [Registros Odontológicos]
@@ -177,7 +177,7 @@ router.delete('/:id', authenticate, authorize(['admin', 'perito']), dentalsRecor
 
 /**
  * @swagger
- * /api/dental-records:
+ * /api/dentalRecord:
  *   delete:
  *     summary: Remove todos os registros odontológicos
  *     tags: [Registros Odontológicos]

@@ -59,7 +59,7 @@ const router = express.Router()
 
 /**
  * @swagger
- * /api/general-reports:
+ * /api/genRecord:
  *   post:
  *     summary: Cria um novo relatório geral
  *     tags: [Relatórios Gerais]
@@ -88,7 +88,7 @@ router.post('/', authenticate, authorize(['admin', 'perito']), gRController.crea
 
 /**
  * @swagger
- * /api/general-reports:
+ * /api/genRecord:
  *   get:
  *     summary: Lista todos os relatórios gerais
  *     tags: [Relatórios Gerais]
@@ -108,7 +108,7 @@ router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), gRCo
 
 /**
  * @swagger
- * /api/general-reports/{id}:
+ * /api/genRecord/{id}:
  *   get:
  *     summary: Retorna um relatório geral pelo ID
  *     tags: [Relatórios Gerais]
@@ -135,7 +135,7 @@ router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), g
 
 /**
  * @swagger
- * /api/general-reports/{id}:
+ * /api/genRecord/{id}:
  *   put:
  *     summary: Atualiza um relatório geral existente
  *     tags: [Relatórios Gerais]
@@ -173,7 +173,7 @@ router.put('/:id', authenticate, authorize(['admin', 'perito']), gRController.up
 
 /**
  * @swagger
- * /api/general-reports/{id}:
+ * /api/genRecord{id}:
  *   delete:
  *     summary: Deleta um relatório geral pelo ID
  *     tags: [Relatórios Gerais]
@@ -196,7 +196,7 @@ router.delete('/:id', authenticate, authorize(['admin']), gRController.deleteGrB
 
 /**
  * @swagger
- * /api/general-reports:
+ * /api/genRecord:
  *   delete:
  *     summary: Deleta todos os relatórios gerais
  *     tags: [Relatórios Gerais]

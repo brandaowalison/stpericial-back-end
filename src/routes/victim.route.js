@@ -42,6 +42,7 @@ const router = express.Router()
  *           description: Observações adicionais sobre a vítima
  *         ethnicity:
  *           type: string
+ *           enum: ['branca', 'preta','parda','amarela','indigena','outro']
  *           description: Etnia da vítima
  *         age:
  *           type: integer
