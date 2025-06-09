@@ -9,7 +9,9 @@ const createEvidence = async (req, res) => {
             collectionDate: req.body.collectionDate,
             collectedBy: req.body.collectedBy,
             fileUrl: fileUrl,
-            case: req.body.case
+            case: req.body.case,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude
         })
         await evidence.save()
         res.status(201).json({message: 'Evidência adicionado com sucesso!', evidence: evidence})

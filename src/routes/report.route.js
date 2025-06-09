@@ -217,6 +217,59 @@ router.delete('/:id', authenticate, authorize(['admin']), reportController.delet
  */
 router.delete('/', authenticate, authorize(['admin']), reportController.deleteReports)
 
-router.get('/ia/:case_id', authenticate, authorize(['admin']), reportController.generateReportWithIA)
+/**
+ * @swagger
+ * /api/reports/ia/{case_id}:
+ *   get:
+ *     summary: Gera laudos automaticamente via IA para todas as evidências de um caso
+ *     tags: [Laudos]
+ *     parameters:
+ *       - name: case_id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do caso para buscar as evidências
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Laudos gerados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 reports:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       reportId:
+ *                         type: string
+ *                       evidenceId:
+ *                         type: string
+ *       400:
+ *         description: Nenhuma evidência encontrada ou erro de parâmetro
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Erro ao gerar laudo com IA
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
+router.get('/ia/:case_id', authenticate, authorize(['admin','perito']), reportController.generateReportWithIA)
 
 module.exports = router

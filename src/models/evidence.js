@@ -34,6 +34,12 @@ const evidenceSchema = new mongoose.Schema({
             message: props => `${props.value} não é uma URL válida com extensão permitida (.jpg, .png, .gif, .pdf, .mp4, .mov, etc.)`
         }
     },
+    latitude: {
+        type: Number
+    },
+    longitude: {
+        type: Number
+    },
     case: {
         type: mongoose.Schema.ObjectId,
         ref: 'Case',
