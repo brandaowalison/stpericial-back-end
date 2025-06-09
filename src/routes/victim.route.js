@@ -40,6 +40,12 @@ const router = express.Router()
  *         observations:
  *           type: string
  *           description: Observações adicionais sobre a vítima
+ *         ethnicity:
+ *           type: string
+ *           description: Etnia da vítima
+ *         age:
+ *           type: integer
+ *           description: Idade da vítima
  */
 
 /**
