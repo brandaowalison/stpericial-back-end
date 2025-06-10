@@ -241,10 +241,11 @@ const generateReportWithIA = async (req, res) => {
 
 const sendReportByEmail = async (req, res) => {
   const { id } = req.params
-  const { email } = req.body
+  // Pegue o e-mail do usuário autenticado
+  const email = req.user?.email
 
   if (!email) {
-    return res.status(400).json({ message: 'E-mail do destinatário não informado.' })
+    return res.status(400).json({ message: 'E-mail do usuário logado não encontrado.' })
   }
 
   try {
@@ -267,7 +268,6 @@ const sendReportByEmail = async (req, res) => {
     const PDFDocument = require('pdfkit')
     const { PassThrough } = require('stream')
     const path = require('path')
-    const getStream = (await import('get-stream')).default
 
     const doc = new PDFDocument()
     const stream = new PassThrough()
@@ -296,7 +296,6 @@ const sendReportByEmail = async (req, res) => {
 
     doc.end()
 
-    // Aguarde o stream terminar antes de gerar o buffer
     const pdfBuffer = await new Promise((resolve, reject) => {
       const bufs = []
       stream.on('data', d => bufs.push(d))

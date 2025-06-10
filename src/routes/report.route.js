@@ -272,6 +272,29 @@ router.delete('/', authenticate, authorize(['admin']), reportController.deleteRe
  */
 router.get('/ia/:case_id', authenticate, authorize(['admin','perito']), reportController.generateReportWithIA)
 
+
+
+/**
+ * @swagger
+ * /api/reports/sendEmail/{id}:
+ *   post:
+ *     summary: Envia um laudo por email de quem está logado
+ *     tags: [Laudos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do laudo a ser enviado por email
+ *     responses:
+ *       200:
+ *         description: Laudo enviado por email com sucesso
+ *       404:
+ *         description: Laudo não encontrado
+ *       500:
+ *         description: Erro ao enviar laudo por email
+ */
 router.post('/sendEmail/:id', authenticate, authorize(['admin', 'perito']), reportController.sendReportByEmail)
 
 module.exports = router
