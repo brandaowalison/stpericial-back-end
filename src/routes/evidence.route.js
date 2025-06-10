@@ -42,6 +42,12 @@ const router = express.Router()
  *         case:
  *           type: string
  *           description: ID do caso relacionado a essa evidência
+ *         latitude:
+ *           type: number
+ *           description: Latitude da evidência
+ *         longitude:
+ *           type: number
+ *           description: Longitude da evidência
  */
 
 /**
@@ -74,6 +80,10 @@ const router = express.Router()
  *               case:
  *                 type: string
  *                 description: ID do caso associado à evidência
+ * *               latitude:
+ *                 type: number
+ * *               longitude:
+ *                 type: number
  *     responses:
  *       201:
  *         description: Evidência adicionada com sucesso

@@ -48,8 +48,8 @@ const { authenticate, authorize } = require('../middlewares/auth')
  *           type: string
  *           description: ID do usuário responsável
  *         victim:
- *           type: string
- *           description: ID da vítima associada ao caso
+ *           type: array
+ *           description: Lista de IDs das vítimas associadas ao caso
  */
 
 /**

@@ -43,10 +43,10 @@ const caseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    victim: {
+    victim: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Victim'
-    }
+    }]
 }, {timestamps: true});
 
 const Case = mongoose.model('Case', caseSchema);
