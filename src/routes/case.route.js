@@ -50,6 +50,9 @@ const { authenticate, authorize } = require('../middlewares/auth')
  *         victim:
  *           type: array
  *           description: Lista de IDs das vítimas associadas ao caso
+ *           items:
+ *             type: string
+ *             description: ID da vítima (ObjectId)
  */
 
 /**
