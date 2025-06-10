@@ -83,7 +83,7 @@ const router = express.Router()
  *               latitude:
  *                 type: number
  *               longitude:
- *                  type: number
+ *                 type: number
  *     responses:
  *       201:
  *         description: Evidência adicionada com sucesso
