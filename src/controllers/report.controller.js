@@ -3,6 +3,7 @@ const {assinarLaudo} = require('../utils/assinatura')
 const Report = require('../models/report')
 const Evidence = require('../models/evidence')
 const axios = require('axios')
+const nodemailer = require('nodemailer')
 
 const createReport = async (req, res) => {
     try {
@@ -238,6 +239,100 @@ const generateReportWithIA = async (req, res) => {
     }
 }
 
+const sendReportByEmail = async (req, res) => {
+  const { id } = req.params
+  const { email } = req.body
+
+  if (!email) {
+    return res.status(400).json({ message: 'E-mail do destinatário não informado.' })
+  }
+
+  try {
+    const report = await Report.findById(id)
+      .populate('expertResponsible', 'name')
+      .populate('evidence')
+
+    if (!report) {
+      return res.status(404).json({ message: 'Laudo não encontrado.' })
+    }
+
+    const contentToSubscribe = `
+      Título: ${report.title}
+      Descrição: ${report.description}
+      Data de Emissão: ${new Date(report.dateEmission).toLocaleDateString()}
+      Perito responsável: ${report.expertResponsible?.name || 'Não informado'}
+    `
+    const assinatura = assinarLaudo(contentToSubscribe)
+
+    const PDFDocument = require('pdfkit')
+    const { PassThrough } = require('stream')
+    const path = require('path')
+    const getStream = (await import('get-stream')).default
+
+    const doc = new PDFDocument()
+    const stream = new PassThrough()
+    doc.pipe(stream)
+
+    const logoPath = path.join(__dirname, '../assets/images/logo-stpericial.jpeg')
+
+    doc.image(logoPath, 50, 20, { width: 100 })
+    doc.fontSize(20).text('Laudo Pericial', { align: 'center' })
+    doc.moveDown()
+    doc.fontSize(12).text(`ID da Evidência: ${report.evidence._id}`)
+    doc.text(`Nome da Evidência: ${report.evidence.type || 'Não informado'}`)
+    doc.text(`Descrição da Evidência: ${report.evidence.text || 'Não informado'}`)
+    doc.moveDown()
+    doc.text(`Título: ${report.title}`)
+    doc.text(`Descrição: ${report.description}`)
+    doc.moveDown()
+    doc.text(`Data de Emissão: ${new Date(report.dateEmission).toLocaleDateString()}`)
+    doc.text(`Perito responsável: ${report.expertResponsible?.name || 'Não informado'}`)
+    doc.moveDown()
+    doc.text('---')
+    doc.text(`Gerado em: ${new Date().toLocaleString()}`)
+    doc.moveDown()
+    doc.fontSize(10).text('Assinatura digital:', { underline: true })
+    doc.font('Helvetica').fontSize(8).text(assinatura, { width: 500 })
+
+    doc.end()
+
+    // Aguarde o stream terminar antes de gerar o buffer
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      const bufs = []
+      stream.on('data', d => bufs.push(d))
+      stream.on('end', () => resolve(Buffer.concat(bufs)))
+      stream.on('error', reject)
+    })
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    })
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: `Laudo Pericial - ${report.title}`,
+      text: 'Segue em anexo o Laudo Pericial solicitado.',
+      attachments: [
+        {
+          filename: `laudo_${report._id}.pdf`,
+          content: pdfBuffer
+        }
+      ]
+    })
+
+    res.status(200).json({ message: 'Laudo enviado por e-mail com sucesso!' })
+  } catch (err) {
+    console.error('Erro ao enviar laudo por e-mail:', err)
+    res.status(500).json({ error: 'Erro ao enviar laudo por e-mail.' })
+  }
+}
+
+
 
 
 module.exports = {
@@ -248,5 +343,6 @@ module.exports = {
     deleteReportById,
     deleteReports,
     generateReportPdf,
-    generateReportWithIA
+    generateReportWithIA,
+    sendReportByEmail
 }

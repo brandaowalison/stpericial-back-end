@@ -272,4 +272,6 @@ router.delete('/', authenticate, authorize(['admin']), reportController.deleteRe
  */
 router.get('/ia/:case_id', authenticate, authorize(['admin','perito']), reportController.generateReportWithIA)
 
+router.post('/sendEmail/:id', authenticate, authorize(['admin', 'perito']), reportController.sendReportByEmail)
+
 module.exports = router
