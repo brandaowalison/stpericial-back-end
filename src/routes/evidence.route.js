@@ -80,10 +80,10 @@ const router = express.Router()
  *               case:
  *                 type: string
  *                 description: ID do caso associado à evidência
- * *               latitude:
+ *               latitude:
  *                 type: number
- * *               longitude:
- *                 type: number
+ *               longitude:
+ *                  type: number
  *     responses:
  *       201:
  *         description: Evidência adicionada com sucesso
