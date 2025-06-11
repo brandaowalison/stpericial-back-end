@@ -210,7 +210,7 @@ router.delete('/', authenticate, authorize(['admin']), gRController.deleteGr)
 
 /**
  * @swagger
- * /api/genRecord/{case_id}:
+ * /api/genRecord/ia/{case_id}:
  *   get:
  *     summary: Gera um relatório geral com IA para um caso específico
  *     tags: [Relatórios Gerais]
@@ -238,7 +238,7 @@ router.delete('/', authenticate, authorize(['admin']), gRController.deleteGr)
  *       500:
  *         description: Erro ao gerar relatório
  */
-router.get('/generalReport/:case_id', authenticate, authorize(['admin', 'perito']), gRController.generateGeneralReportWithIA)
+router.get('/Ia/:case_id', authenticate, authorize(['admin', 'perito']), gRController.generateGeneralReportWithIA)
 
 /**
 *   @swagger
