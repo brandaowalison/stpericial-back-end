@@ -27,12 +27,11 @@ const generalReportSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Report'
   }],
+  victim: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Victim',
+  }],
   observations: String,
-  status: {
-    type: String,
-    enum: ['rascunho', 'finalizado', 'enviado'],
-    default: 'rascunho',
-  }
 })
 
 const GeneralReport = mongoose.model('GeneralReport', generalReportSchema)

@@ -1,5 +1,5 @@
 const express = require('express')
-const gRController = require('../controllers/generalRecord.controller')
+const gRController = require('../controllers/generalReport.controller')
 const { authenticate, authorize } = require('../middlewares/auth')
 const router = express.Router()
 
@@ -208,4 +208,76 @@ router.delete('/:id', authenticate, authorize(['admin']), gRController.deleteGrB
  */
 router.delete('/', authenticate, authorize(['admin']), gRController.deleteGr)
 
+/**
+ * @swagger
+ * /api/genRecord/{case_id}:
+ *   get:
+ *     summary: Gera um relatório geral com IA para um caso específico
+ *     tags: [Relatórios Gerais]
+ *     parameters:
+ *       - name: case_id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do caso para o qual o relatório será gerado
+ *     responses:
+ *       200:
+ *         description: Relatório gerado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 report:
+ *                   $ref: '#/components/schemas/GeneralReport'
+ *       404:
+ *         description: Caso não encontrado ou relatório já existe
+ *       500:
+ *         description: Erro ao gerar relatório
+ */
+router.get('/generalReport/:case_id', authenticate, authorize(['admin', 'perito']), gRController.generateGeneralReportWithIA)
+
+/**
+/api/genRecord/sendEmail/{id}:
+ *   post:
+ *     summary: Envia o relatório geral em PDF por e-mail para o usuário autenticado
+ *     tags: [Relatórios Gerais]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do relatório geral a ser enviado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: E-mail do destinatário
+ *     responses:
+ *       200:
+ *         description: Relatório geral enviado por e-mail com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: E-mail do usuário logado não encontrado
+ *       404:
+ *         description: Relatório geral não encontrado
+ *       500:
+ *         description: Erro ao enviar relatório geral por e-mail
+ */
+router.post('/sendEmail/:id', authenticate, authorize(['admin', 'perito']), gRController.sendGenaralReportByEmail)
 module.exports = router
